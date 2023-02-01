@@ -23,6 +23,10 @@ export class AccountService {
     return this.accountModel.find({ _id: id }).exec()
   }
 
+  async updateOne (id: string, dto: AccountModel): Promise<AccountModel | null> {
+    return this.accountModel.findByIdAndUpdate(id, dto).exec()
+  }
+
   async delete (id: string): Promise<DocumentType<AccountModel> | null> {
     return this.accountModel.findByIdAndDelete(id).exec()
   }

@@ -1,6 +1,6 @@
 {
   "name": "jupiter",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "DBO API Server",
   "author": "y.ivanchenko <jurgenet@gmail.com>",
   "private": true,
