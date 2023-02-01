@@ -19,7 +19,7 @@ import { DeviceModule } from './modules/device/device.module'
     TypegooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: getMongoConfig
+      useFactory: getMongoConfig,
     }),
     SystemModule,
     AuthModule,
@@ -30,7 +30,7 @@ import { DeviceModule } from './modules/device/device.module'
     KnowledgeModule,
     DeviceModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController], // unusual
+  providers: [AppService], // unusual
 })
 export class AppModule {}

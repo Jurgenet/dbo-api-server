@@ -1,7 +1,7 @@
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 import { prop } from '@typegoose/typegoose/lib/prop'
 
-class NoteLink {
+export class NoteLink {
   @prop()
   label: string
 
@@ -19,7 +19,7 @@ export class NoteModel extends TimeStamps {
   text: string
 
   @prop({ type: () => [NoteLink], _id: false })
-  links: [NoteLink]
+  links: NoteLink[]
 
   @prop({ type: () => [String] })
   markers: string[]

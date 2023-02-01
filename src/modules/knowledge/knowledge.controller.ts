@@ -1,33 +1,43 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common'
-import { FindKnowledgeDto } from './dto/find-knowledge'
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common'
+import { CreateKnowledgeDto } from './dto/create-knowledge.dto'
+import { KNOWLEDGE_NOT_FOUND } from './knowledge.constants'
 import { KnowledgeModel } from './knowledge.model'
+import { KnowledgeService } from './knowledge.service'
 
 @Controller('knowledge')
 export class KnowledgeController {
 
-  @Post('create')
-  async create (@Body() dto: Omit<KnowledgeModel, '_id'>) {
-    //
+  constructor (
+    private readonly knowledgeService: KnowledgeService
+  ) {}
+
+  @UsePipes(new ValidationPipe())
+  @Post()
+  async create (@Body() dto: CreateKnowledgeDto) {
+    return this.knowledgeService.create(dto)
+  }
+
+  @Get()
+  async getAll () {
+    return this.knowledgeService.getAll()
   }
 
   @Get(':id')
-  async get (@Param('id') _id: string) {
-    //
+  async getOne (@Param('id') id: string) {
+    return this.knowledgeService.getOne(id)
   }
 
   @Delete(':id')
-  async delete (@Param('id') _id: string) {
-    //
+  async delete (@Param('id') id: string) {
+    const deletedItem = await this.knowledgeService.delete(id)
+
+    if (!deletedItem) {
+      throw new HttpException(KNOWLEDGE_NOT_FOUND, HttpStatus.NOT_FOUND)
+    }
   }
 
   @Patch(':id')
   async patch (@Param('id') _id: string, @Body() dto: KnowledgeModel) {
-    //
-  }
-
-  @HttpCode(200)
-  @Post()
-  async find (@Body() dto: FindKnowledgeDto) {
     //
   }
 }

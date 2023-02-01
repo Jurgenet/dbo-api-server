@@ -5,7 +5,7 @@ export interface OrderModel extends Base {}
 export class OrderModel extends TimeStamps {
 
   @prop()
-  date: Date
+  date: String
 
   @prop()
   title: string
@@ -27,4 +27,7 @@ export class OrderModel extends TimeStamps {
 
   @prop({ type: () => [String] })
   markers: string[]
+
+  @prop()
+  text: string
 }

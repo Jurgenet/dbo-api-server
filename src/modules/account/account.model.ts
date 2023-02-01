@@ -5,10 +5,10 @@ export interface AccountModel extends Base {}
 export class AccountModel extends TimeStamps {
 
   @prop()
-  category: string
+  title: string
 
   @prop()
-  title: string
+  group: string
 
   @prop()
   email: string
@@ -22,12 +22,9 @@ export class AccountModel extends TimeStamps {
   @prop()
   link: string
 
-  @prop()
-  location: string
+  @prop({ type: () => [String] })
+  markers: string[]
 
   @prop()
   text: string
-
-  @prop({ type: () => [String] })
-  markers: string[]
 }

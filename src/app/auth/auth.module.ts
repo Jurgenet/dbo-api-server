@@ -9,7 +9,7 @@ import { AuthModel } from './auth.model'
     TypegooseModule.forFeature([{
       typegooseClass: AuthModel,
       schemaOptions: {
-        collection: '_auth',
+        collection: 'auth',
       },
     }]),
   ],

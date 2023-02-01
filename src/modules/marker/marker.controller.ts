@@ -1,33 +1,61 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common'
-import { FindProductDto } from './dto/find-marker.dto'
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common'
+import { CREATED_SUCCESSFULLY, FETCHED_SUCCESSFULLY, UPDATED_SUCCESSFULLY } from '../../app.constants'
+import { CreateMarkerDto } from './dto/create-marker.dto'
+import { MARKER_NOT_FOUND } from './marker.constants'
 import { MarkerModel } from './marker.model'
+import { MarkerService } from './marker.service'
 
 @Controller('marker')
 export class MarkerController {
 
-  @Post('create')
-  async create (@Body() dto: Omit<MarkerModel, '_id'>) {
-    //
+  constructor (
+    private readonly markerService: MarkerService
+  ) {}
+
+  @UsePipes(new ValidationPipe())
+  @Post()
+  async create (@Body() dto: CreateMarkerDto) {
+    const doc = await this.markerService.create(dto)
+
+    return {
+      message: CREATED_SUCCESSFULLY,
+      result: doc,
+    }
   }
 
+  @Get()
+  async getAll () {
+    const result = await this.markerService.getAll()
+
+    return { message: FETCHED_SUCCESSFULLY, count: result.length, result }
+  }
+
+
   @Get(':id')
-  async get (@Param('id') _id: string) {
-    //
+  async getOne (@Param('id') id: string) {
+    return this.markerService.getOne(id)
   }
 
   @Delete(':id')
-  async delete (@Param('id') _id: string) {
-    //
+  async delete (@Param('id') id: string) {
+    const deletedItem = await this.markerService.delete(id)
+
+    if (!deletedItem) {
+      throw new HttpException(MARKER_NOT_FOUND, HttpStatus.NOT_FOUND)
+    }
   }
 
   @Patch(':id')
-  async patch (@Param('id') _id: string, @Body() dto: MarkerModel) {
-    //
-  }
+  async patch (@Param('id') id: string, @Body() dto: MarkerModel) {
+    const updatedDoc = await this.markerService.updateOne(id, dto)
 
-  @HttpCode(200)
-  @Post()
-  async find (@Body() dto: FindProductDto) {
-    //
+    if (!updatedDoc) {
+      throw new HttpException(MARKER_NOT_FOUND, HttpStatus.NOT_FOUND)
+    }
+
+    return {
+      message: UPDATED_SUCCESSFULLY,
+      result: updatedDoc,
+    }
   }
 }

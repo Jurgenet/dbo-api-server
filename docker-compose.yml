@@ -1,14 +1,33 @@
-version: '3'
+version: '3.8'
+
 services:
-  mongo:
-    image: mongo
-    container_name: mongo
-    restart: always
-    environment:
-      - MONGO_INITDB_ROO_USERNAME=admin
-      - MONGO_INITDB_ROO_PASSWORD=admin
-    ports:
-      - 27017:27017
+
+  mongodb:
+    image: mongo:6.0.3
+    container_name: mongodb
+    restart: unless-stopped
     volumes:
-      - ./mongo-data:/data/db
+      - mongodb_data:/data/db
     command: --wiredTigerCacheSizeGB 1.5
+    ports:
+      - '27017:27017'
+
+  api-server:
+    container_name: api_server
+    restart: unless-stopped
+    build: .
+    command: yarn start:prod
+    ports:
+      - '3001:3001'
+    environment:
+      - DOCKERIZED=true
+      - PORT=3001
+      - SERVER_NAME=${SERVER_NAME}
+      - MONGODB_CONNECTION=${MONGODB_CONNECTION}
+      - MONGODB_TOOLS_CONNECTION=${MONGODB_TOOLS_CONNECTION}
+      - MONGODB_BACKUP_FOLDER=${MONGODB_BACKUP_FOLDER}
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:

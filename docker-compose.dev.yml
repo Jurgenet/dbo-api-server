@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+
+  mongodb:
+    ports:
+      - '27017:27017'
+
+  api-server:
+    command: yarn start:dev
+    volumes:
+      - ./src:/usr/src/app/src

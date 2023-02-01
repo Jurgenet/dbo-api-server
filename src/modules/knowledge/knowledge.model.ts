@@ -1,54 +1,51 @@
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 import { prop } from '@typegoose/typegoose/lib/prop'
 
-export enum KnowledgeCategory {
-  Course = 'Course',
-  Book = 'Book',
-  Video = 'Video',
-  Post = 'Post',
-  Service = 'Service',
-  Other = 'Other',
-}
-
 export interface KnowledgeModel extends Base {}
 export class KnowledgeModel extends TimeStamps {
 
-  @prop({ enum: KnowledgeCategory, type: () => String })
-  category: KnowledgeCategory
+  @prop()
+  type: string
 
   @prop()
-  yearOfIssue: number
+  date: string
 
   @prop()
   title: string
 
   @prop()
-  lang: string
-
-  @prop()
-  publisher: string
+  platform: string
 
   @prop()
   author: string
 
   @prop()
+  lang: string
+
+  @prop()
   cover: string
+
+  @prop()
+  location: string
 
   @prop()
   link: string
 
   @prop()
-  location: string
-
-  @prop({ type: () => [String] })
-  markers: string[]
+  text: string
 
   @prop()
   isActive: boolean
 
   @prop()
-  isDone: boolean
+  isOnline: boolean
 
   @prop()
-  isLicensed: boolean
+  isDone: boolean
+
+  @prop({ type: () => [String] })
+  markers: string[]
+
+  @prop()
+  rating?: number
 }

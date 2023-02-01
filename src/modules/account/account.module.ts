@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { TypegooseModule } from 'nestjs-typegoose'
 import { AccountController } from './account.controller'
 import { AccountModel } from './account.model'
+import { AccountService } from './account.service'
 
 @Module({
   controllers: [AccountController],
@@ -13,6 +14,7 @@ import { AccountModel } from './account.model'
       },
     }])
   ],
+  providers: [AccountService],
 })
 export class AccountModule {
 

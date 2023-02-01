@@ -1,38 +1,43 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common'
-import { FindOrderDto } from './dto/find-order.dto'
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common'
+import { CreateOrderDto } from './dto/create-order.dto'
+import { ORDER_NOT_FOUND } from './order.constants'
 import { OrderModel } from './order.model'
+import { OrderService } from './order.service'
 
 @Controller('order')
 export class OrderController {
 
-  @Post('create')
-  async create (@Body() dto: Omit<OrderModel, '_id'>) {
-    //
+  constructor (
+    private readonly orderService: OrderService
+  ) {}
+
+  @UsePipes(new ValidationPipe())
+  @Post()
+  async create (@Body() dto: CreateOrderDto) {
+    return this.orderService.create(dto)
+  }
+
+  @Get()
+  async getAll () {
+    return this.orderService.getAll()
   }
 
   @Get(':id')
-  async get (@Param('id') _id: string) {
-    //
+  async getOne (@Param('id') id: string) {
+    return this.orderService.getOne(id)
   }
 
   @Delete(':id')
-  async delete (@Param('id') _id: string) {
-    //
+  async delete (@Param('id') id: string) {
+    const deletedItem = await this.orderService.delete(id)
+
+    if (!deletedItem) {
+      throw new HttpException(ORDER_NOT_FOUND, HttpStatus.NOT_FOUND)
+    }
   }
 
   @Patch(':id')
   async patch (@Param('id') _id: string, @Body() dto: OrderModel) {
-    //
-  }
-
-  @HttpCode(200)
-  @Post()
-  async find (@Body() dto: FindOrderDto) {
-    //
-  }
-
-  @Get('byDevice/:deviceId')
-  async getByDevice (@Param('deviceId') deviceId: string) {
     //
   }
 }
