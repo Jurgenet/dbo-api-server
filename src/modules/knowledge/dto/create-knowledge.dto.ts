@@ -6,6 +6,9 @@ export class CreateKnowledgeDto {
   type: string
 
   @IsString()
+  group: string
+
+  @IsString()
   date: string
 
   @IsString()
@@ -47,7 +50,7 @@ export class CreateKnowledgeDto {
 
   @IsOptional()
   @IsNumber()
-  @Min(1,)
+  @Min(0)
   @Max(5)
   rating?: number
 }

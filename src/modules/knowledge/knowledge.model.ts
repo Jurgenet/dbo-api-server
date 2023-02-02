@@ -8,6 +8,9 @@ export class KnowledgeModel extends TimeStamps {
   type: string
 
   @prop()
+  group: string
+
+  @prop()
   date: string
 
   @prop()

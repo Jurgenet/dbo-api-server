@@ -3,7 +3,6 @@ import { InjectModel } from 'nestjs-typegoose'
 import { ModelType, DocumentType } from '@typegoose/typegoose/lib/types'
 import { KnowledgeModel } from './knowledge.model'
 import { CreateKnowledgeDto } from './dto/create-knowledge.dto'
-import { Types } from 'mongoose'
 
 @Injectable()
 export class KnowledgeService {
@@ -24,11 +23,11 @@ export class KnowledgeService {
     return this.knowledgeModel.find({ _id: id }).exec()
   }
 
-  async delete (id: string): Promise<DocumentType<KnowledgeModel> | null> {
-    return this.knowledgeModel.findByIdAndDelete(id).exec()
+  async updateOne (id: string, dto: KnowledgeModel): Promise<KnowledgeModel | null> {
+    return this.knowledgeModel.findByIdAndUpdate(id, dto).exec()
   }
 
-  async finByMarkerId (markerId: string): Promise<KnowledgeModel[]> {
-    return this.knowledgeModel.find({ markerId: new Types.ObjectId(markerId) }).exec()
+  async delete (id: string): Promise<DocumentType<KnowledgeModel> | null> {
+    return this.knowledgeModel.findByIdAndDelete(id).exec()
   }
 }
