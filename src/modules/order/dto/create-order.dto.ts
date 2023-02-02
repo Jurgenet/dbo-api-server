@@ -6,6 +6,9 @@ export class CreateOrderDto {
   date: string
 
   @IsString()
+  group: string
+
+  @IsString()
   title: string
 
   @IsNumber()

@@ -8,6 +8,9 @@ export class OrderModel extends TimeStamps {
   date: String
 
   @prop()
+  group: String
+
+  @prop()
   title: string
 
   @prop()

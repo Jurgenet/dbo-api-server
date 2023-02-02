@@ -23,6 +23,10 @@ export class OrderService {
     return this.orderModel.find({ _id: id }).exec()
   }
 
+  async updateOne (id: string, dto: OrderModel): Promise<OrderModel | null> {
+    return this.orderModel.findByIdAndUpdate(id, dto).exec()
+  }
+
   async delete (id: string): Promise<DocumentType<OrderModel> | null> {
     return this.orderModel.findByIdAndDelete(id).exec()
   }
