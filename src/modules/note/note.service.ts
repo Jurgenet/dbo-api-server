@@ -3,7 +3,6 @@ import { InjectModel } from 'nestjs-typegoose'
 import { ModelType, DocumentType } from '@typegoose/typegoose/lib/types'
 import { NoteModel } from './note.model'
 import { CreateNoteDto } from './dto/create-note.dto'
-import { Types } from 'mongoose'
 
 @Injectable()
 export class NoteService {
@@ -17,18 +16,21 @@ export class NoteService {
   }
 
   async getAll (): Promise<NoteModel[]> {
-    return this.noteModel.find({}).exec()
+    return this.noteModel
+      .find({})
+      .sort({ isPinned: -1 })
+      .exec()
   }
 
   async getOne (id: string): Promise<NoteModel[]> {
     return this.noteModel.find({ _id: id }).exec()
   }
 
-  async delete (id: string): Promise<DocumentType<NoteModel> | null> {
-    return this.noteModel.findByIdAndDelete(id).exec()
+  async updateOne (id: string, dto: NoteModel): Promise<NoteModel | null> {
+    return this.noteModel.findByIdAndUpdate(id, dto).exec()
   }
 
-  async finByMarkerId (markerId: string): Promise<NoteModel[]> {
-    return this.noteModel.find({ markerId: new Types.ObjectId(markerId) }).exec()
+  async delete (id: string): Promise<DocumentType<NoteModel> | null> {
+    return this.noteModel.findByIdAndDelete(id).exec()
   }
 }

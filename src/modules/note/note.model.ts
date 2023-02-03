@@ -26,10 +26,4 @@ export class NoteModel extends TimeStamps {
 
   @prop()
   isPinned: boolean
-
-  @prop()
-  createdAt: Date
-
-  @prop()
-  updatedAt: Date
 }
