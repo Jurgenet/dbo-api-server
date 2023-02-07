@@ -1,4 +1,12 @@
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator'
+
 export class FindNoteDto {
+
+  @IsArray()
+  @IsString({ each: true })
   markers: string[]
-  limit: number
+
+  @IsOptional()
+  @IsNumber()
+  limit?: number
 }

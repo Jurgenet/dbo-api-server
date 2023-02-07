@@ -3,11 +3,11 @@ import { IsString, IsNumber } from 'class-validator'
 export class FindMarkerDto {
 
   @IsString()
-  _id: string
+  _id?: string
 
   @IsString()
-  ancestor: string
+  ancestor?: string
 
   @IsNumber()
-  limit: number
+  limit?: number
 }

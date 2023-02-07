@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer'
-import { IsArray, IsBoolean, IsString } from 'class-validator'
+import { IsArray, IsBoolean, IsString, ValidateNested } from 'class-validator'
 import { NoteLink } from '../note.model'
 
 export class CreateNoteDto {
@@ -11,10 +11,12 @@ export class CreateNoteDto {
   text: string
 
   @IsArray()
+  @ValidateNested()
   @Type(() => NoteLink)
   links: NoteLink[]
 
   @IsArray()
+  @IsString({ each: true })
   markers: string[]
 
   @IsBoolean()

@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common'
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common'
 import { CREATED_SUCCESSFULLY, FETCHED_SUCCESSFULLY, UPDATED_SUCCESSFULLY } from '../../app.constants'
 import { CreateMarkerDto } from './dto/create-marker.dto'
+import { FindMarkerDto } from './dto/find-marker.dto'
 import { MARKER_NOT_FOUND } from './marker.constants'
 import { MarkerModel } from './marker.model'
 import { MarkerService } from './marker.service'
@@ -30,7 +31,6 @@ export class MarkerController {
     return { message: FETCHED_SUCCESSFULLY, count: result.length, result }
   }
 
-
   @Get(':id')
   async getOne (@Param('id') id: string) {
     return this.markerService.getOne(id)
@@ -57,5 +57,11 @@ export class MarkerController {
       message: UPDATED_SUCCESSFULLY,
       result: updatedDoc,
     }
+  }
+
+  @Post('find')
+  @HttpCode(200)
+  async find (@Body() dto: FindMarkerDto) {
+    return this.markerService.find(dto)
   }
 }

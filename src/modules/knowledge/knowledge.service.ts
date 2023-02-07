@@ -16,7 +16,10 @@ export class KnowledgeService {
   }
 
   async getAll (): Promise<KnowledgeModel[]> {
-    return this.knowledgeModel.find({}).exec()
+    return this.knowledgeModel
+    .find({})
+    .sort({ isActive: -1, rating: -1, date: -1, })
+    .exec()
   }
 
   async getOne (id: string): Promise<KnowledgeModel[]> {
@@ -24,7 +27,7 @@ export class KnowledgeService {
   }
 
   async updateOne (id: string, dto: KnowledgeModel): Promise<KnowledgeModel | null> {
-    return this.knowledgeModel.findByIdAndUpdate(id, dto).exec()
+    return this.knowledgeModel.findByIdAndUpdate(id, dto, { new: true }).exec()
   }
 
   async delete (id: string): Promise<DocumentType<KnowledgeModel> | null> {

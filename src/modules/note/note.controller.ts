@@ -1,6 +1,8 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common'
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common'
 import { CREATED_SUCCESSFULLY, FETCHED_SUCCESSFULLY, UPDATED_SUCCESSFULLY } from 'src/app.constants'
+import { IdValidationPipe } from '../../pipes/ad-validation.pipe'
 import { CreateNoteDto } from './dto/create-note.dto'
+import { FindNoteDto } from './dto/find-note.dto'
 import { NOTE_NOT_FOUND } from './note.constants'
 import { NoteModel } from './note.model'
 import { NoteService } from './note.service'
@@ -31,14 +33,14 @@ export class NoteController {
   }
 
   @Get(':id')
-  async getOne (@Param('id') id: string) {
+  async getOne (@Param('id', IdValidationPipe) id: string) {
     const doc = await this.noteService.getOne(id)
     
     return { message: FETCHED_SUCCESSFULLY, result: doc[0] }
   }
 
   @Delete(':id')
-  async delete (@Param('id') id: string) {
+  async delete (@Param('id', IdValidationPipe) id: string) {
     const deletedItem = await this.noteService.delete(id)
 
     if (!deletedItem) {
@@ -47,7 +49,7 @@ export class NoteController {
   }
 
   @Patch(':id')
-  async patch (@Param('id') id: string, @Body() dto: NoteModel) {
+  async patch (@Param('id', IdValidationPipe) id: string, @Body() dto: NoteModel) {
     const updatedDoc = await this.noteService.updateOne(id, dto)
 
     if (!updatedDoc) {
@@ -58,5 +60,16 @@ export class NoteController {
       message: UPDATED_SUCCESSFULLY,
       result: updatedDoc,
     }
+  }
+
+  @Post('find')
+  @HttpCode(200)
+  async find (@Body() dto: FindNoteDto) {
+    return this.noteService.find(dto)
+  }
+
+  @Get('findByText/:text')
+  async findByText (@Param('text') text: string) {
+    return this.noteService.findByText(text)
   }
 }

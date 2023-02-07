@@ -24,7 +24,7 @@ export class AccountService {
   }
 
   async updateOne (id: string, dto: AccountModel): Promise<AccountModel | null> {
-    return this.accountModel.findByIdAndUpdate(id, dto).exec()
+    return this.accountModel.findByIdAndUpdate(id, dto, { new: true }).exec()
   }
 
   async delete (id: string): Promise<DocumentType<AccountModel> | null> {

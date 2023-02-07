@@ -1,3 +1,4 @@
+import { index } from '@typegoose/typegoose'
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 import { prop } from '@typegoose/typegoose/lib/prop'
 
@@ -10,6 +11,7 @@ export class NoteLink {
 }
 
 export interface NoteModel extends Base {}
+@index({ title: 'text', text: 'text' })
 export class NoteModel extends TimeStamps {
 
   @prop()

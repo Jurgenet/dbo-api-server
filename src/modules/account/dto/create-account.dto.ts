@@ -21,6 +21,7 @@ export class CreateAccountDto {
   link: string
 
   @IsArray()
+  @IsString({ each: true })
   markers: string[]
 
   @IsString()

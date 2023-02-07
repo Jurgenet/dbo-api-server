@@ -28,6 +28,7 @@ export class CreateOrderDto {
   link: string
 
   @IsArray()
+  @IsString({ each: true })
   markers: string[]
 
   @IsString()
