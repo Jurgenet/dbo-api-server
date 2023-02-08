@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Par
 import { CREATED_SUCCESSFULLY, FETCHED_SUCCESSFULLY, UPDATED_SUCCESSFULLY } from 'src/app.constants'
 import { IdValidationPipe } from '../../pipes/ad-validation.pipe'
 import { CreateNoteDto } from './dto/create-note.dto'
-import { FindNoteDto } from './dto/find-note.dto'
+import { FindNoteByMarkersDto } from './dto/find-by-markers.dto'
 import { NOTE_NOT_FOUND } from './note.constants'
 import { NoteModel } from './note.model'
 import { NoteService } from './note.service'
@@ -62,14 +62,24 @@ export class NoteController {
     }
   }
 
-  @Post('find')
+  @Post('findByMarkers')
   @HttpCode(200)
-  async find (@Body() dto: FindNoteDto) {
-    return this.noteService.find(dto)
+  async findByMarkers (@Body() dto: FindNoteByMarkersDto) {
+    const foundDocs = await this.noteService.findByMarkers(dto)
+
+    return {
+      message: FETCHED_SUCCESSFULLY,
+      result: foundDocs,
+    }
   }
 
   @Get('findByText/:text')
   async findByText (@Param('text') text: string) {
-    return this.noteService.findByText(text)
+    const foundDocs = await this.noteService.findByText(text)
+
+    return {
+      message: FETCHED_SUCCESSFULLY,
+      result: foundDocs,
+    }
   }
 }

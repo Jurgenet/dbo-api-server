@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
+import { PipelineStage } from 'mongoose'
 import { InjectModel } from 'nestjs-typegoose'
 import { ModelType, DocumentType } from '@typegoose/typegoose/lib/types'
 import { NoteModel } from './note.model'
 import { CreateNoteDto } from './dto/create-note.dto'
-import { FindNoteDto } from './dto/find-note.dto'
-import { PipelineStage } from 'mongoose'
+import { FindNoteByMarkersDto } from './dto/find-by-markers.dto'
 
 @Injectable()
 export class NoteService {
@@ -36,7 +36,7 @@ export class NoteService {
     return this.noteModel.findByIdAndDelete(id).exec()
   }
 
-  async find (dto: FindNoteDto): Promise<NoteModel[]> {
+  async findByMarkers (dto: FindNoteByMarkersDto): Promise<NoteModel[]> {
     const pipes: PipelineStage[] = []
 
     pipes.push({ $match: { markers: { $all: dto.markers } } })
