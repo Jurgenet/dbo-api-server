@@ -40,13 +40,16 @@ export class NoteService {
     const pipes: PipelineStage[] = []
 
     pipes.push({ $match: { markers: { $all: dto.markers } } })
-    pipes.push({ $sort: { _id: 1 } })
+    pipes.push({ $sort: { isPinned: -1 } })
     if (dto.limit) pipes.push({ $limit: dto.limit })
 
     return this.noteModel.aggregate(pipes)
   }
 
   async findByText (text: string) {
-    return this.noteModel.find({ $text: { $search: text, $caseSensitive: false } }).exec()
+    return this.noteModel
+      .find({ $text: { $search: text, $caseSensitive: false } })
+      .sort({ isPinned: -1 })
+      .exec()
   }
 }

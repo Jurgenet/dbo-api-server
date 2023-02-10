@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import { TypegooseModule } from 'nestjs-typegoose'
+import { TelegramModule } from 'src/app/telegram/telegram.module'
 import { NoteController } from './note.controller'
 import { NoteModel } from './note.model'
 import { NoteService } from './note.service'
@@ -12,7 +13,8 @@ import { NoteService } from './note.service'
       schemaOptions: {
         collection: 'notes',
       },
-    }])
+    }]),
+    TelegramModule,
   ],
   providers: [NoteService],
 })

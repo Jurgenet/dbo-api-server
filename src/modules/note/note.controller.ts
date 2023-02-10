@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common'
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common'
 import { CREATED_SUCCESSFULLY, FETCHED_SUCCESSFULLY, UPDATED_SUCCESSFULLY } from 'src/app.constants'
+import { TelegramService } from 'src/app/telegram/telegram.service'
 import { IdValidationPipe } from '../../pipes/ad-validation.pipe'
 import { CreateNoteDto } from './dto/create-note.dto'
 import { FindNoteByMarkersDto } from './dto/find-by-markers.dto'
@@ -11,13 +12,16 @@ import { NoteService } from './note.service'
 export class NoteController {
 
   constructor (
-    private readonly noteService: NoteService
+    private readonly noteService: NoteService,
+    private readonly telegramService: TelegramService,
   ) {}
 
   @UsePipes(new ValidationPipe())
   @Post()
   async create (@Body() dto: CreateNoteDto) {
     const doc = await this.noteService.create(dto)
+
+    this.telegramService.sendMessage(`${CREATED_SUCCESSFULLY}: NoteId ${doc._id}`)
 
     return {
       message: CREATED_SUCCESSFULLY,
@@ -56,6 +60,8 @@ export class NoteController {
       throw new HttpException(NOTE_NOT_FOUND, HttpStatus.NOT_FOUND)
     }
 
+    this.telegramService.sendMessage(`${UPDATED_SUCCESSFULLY}: NoteId ${updatedDoc._id}, title: ${updatedDoc.title}`)
+
     return {
       message: UPDATED_SUCCESSFULLY,
       result: updatedDoc,
@@ -81,5 +87,10 @@ export class NoteController {
       message: FETCHED_SUCCESSFULLY,
       result: foundDocs,
     }
+  }
+
+  @Get('notify/:message')
+  async notify (@Param('message') message: string) {
+    return this.telegramService.sendMessage(message)
   }
 }
