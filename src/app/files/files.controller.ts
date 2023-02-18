@@ -1,30 +1,32 @@
-import { Controller, HttpCode, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
+import { Body, Controller, HttpCode, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
+import { PicturesService } from 'src/modules/pictures/pictures.service'
 import { FileElementResponseDto } from './dto/file-element.response.dto'
+import { FileUploadBodyDto } from './dto/file-upload-body.dto'
 import { FilesService } from './files.service'
-import { MFile } from './mfile.class'
 
 @Controller('files')
 export class FilesController {
 
   constructor (
-    private readonly fileService: FilesService
+    private readonly service: FilesService,
+    private readonly pictureService: PicturesService,
   ) {}
 
   @Post('upload')
   @HttpCode(200)
-  @UseInterceptors(FileInterceptor('files'))
-  async uploadFile (@UploadedFile() file: Express.Multer.File): Promise<FileElementResponseDto[]> {
-    const fileList: MFile[] = [new MFile(file)]
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile (@UploadedFile() file: Express.Multer.File, @Body() body: FileUploadBodyDto): Promise<FileElementResponseDto> {
 
-    if (file.mimetype.includes('image')) {
-      const buffer = await this.fileService.convertToWebp(file.buffer)
-      fileList.push(new MFile({
-        originalname: `${file.originalname.split('.')[0]}.webp`,
-        buffer,
-      }))
-    }
+    const doc = await this.service.saveFile(file)
 
-    return this.fileService.saveFiles(fileList)
+    await this.pictureService.create({
+      group: body.group,
+      size: file.size,
+      title: doc.name,
+      url: doc.url,
+    })
+
+    return doc
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import { format } from 'date-fns'
-import { ensureDir, writeFile } from 'fs-extra'
+import { v4 as uuid } from 'uuid'
+import { writeFile } from 'fs-extra'
 import * as sharp from 'sharp'
 import { FileElementResponseDto } from './dto/file-element.response.dto'
 import { MFile } from './mfile.class'
@@ -9,19 +9,12 @@ import { getUploadsFolder } from './files.utils'
 @Injectable()
 export class FilesService {
 
-  async saveFiles (files: MFile[]): Promise<FileElementResponseDto[]> {
-    const response: FileElementResponseDto[] = []
-    const dateFolder = format(new Date(), 'yyyy-MM-dd')
-    const uploadFolder = `${getUploadsFolder()}/${dateFolder}`
+  async saveFile (file: MFile): Promise<FileElementResponseDto> {
+    const newUniqName = `${uuid()}--${file.originalname}`
 
-    await ensureDir(uploadFolder)
+    await writeFile(`${getUploadsFolder()}/${newUniqName}`, file.buffer)
 
-    for(const file of files) {
-      await writeFile(`${uploadFolder}/${file.originalname}`, file.buffer)
-      response.push({ url: `${dateFolder}/${file.originalname}`, name: file.originalname })
-    }
-
-    return response
+    return { url: newUniqName, name: file.originalname }
   }
 
   convertToWebp (file: Buffer): Promise<Buffer> {

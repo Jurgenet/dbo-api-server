@@ -1,3 +1,4 @@
+import { PicturesModule } from './modules/pictures/pictures.module';
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypegooseModule } from 'nestjs-typegoose'
@@ -32,6 +33,7 @@ import { DeviceModule } from './modules/device/device.module'
     SystemModule,
     AuthModule,
     FilesModule,
+    PicturesModule,
     MarkerModule,
     AccountModule,
     NoteModule,
@@ -42,4 +44,4 @@ import { DeviceModule } from './modules/device/device.module'
   controllers: [AppController], // unusual
   providers: [AppService], // unusual
 })
-export class AppModule {}
+export class AppModule { }
